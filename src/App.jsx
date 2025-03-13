@@ -68,7 +68,7 @@ function App() {
 
   return (
     <div className="app">
-      <img src={logo} alt="Barcode Generator Logo" />
+      <img className='logo' src={logo} alt="Barcode Generator Logo" />
       <h1>QR Code Generator by Caleb Yinusa</h1>
       <p>Kindly upload your document in either jpeg, jpg or png format </p>
       <div className="upload-section">
@@ -92,6 +92,7 @@ function App() {
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+      <footer>copyright 2025 Made with ♥ by Caleb Yinusa</footer>
     </div>
   );
 }

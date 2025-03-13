@@ -6,19 +6,31 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f4f9;
+  background-color: #001f3f;
 }
 
 .app {
   text-align: center;
   padding: 20px;
   max-width: 800px;
-  width: 100%;
+  width: 90%;
+  margin: 20px auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
   margin-bottom: 20px;
   color: #333;
+}
+
+/* Logo Styles */
+.logo {
+  max-width: 100%;
+  height: auto;
+  width: 200px;
+  margin-bottom: 20px;
 }
 
 /* Upload Section */
@@ -100,6 +112,17 @@ h1 {
   background-color: #218838;
 }
 
+/* Footer Styles */
+footer {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #666;
+}
+
+footer::before {
+  content: "© ";
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
   .upload-section {
@@ -113,5 +136,39 @@ h1 {
 
   .upload-section button {
     width: 100%;
+  }
+
+  .logo {
+    width: 150px; 
+  }
+}
+
+@media (max-width: 425px) {
+  .upload-section {
+    flex-direction: column;
+  }
+
+  .upload-section input[type="file"],
+  .upload-section input[type="text"] {
+    width: 94%;
+  }
+
+  .upload-section button {
+    width: 100%;
+  }
+
+  .logo {
+    width: 100px; 
+  }
+
+  .app {
+    text-align: center;
+    padding: 20px;
+    max-width: 400px;
+    width: 80%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 }
