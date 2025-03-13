@@ -41,10 +41,10 @@ function App() {
       documentImage.onload = () => {
         // Set canvas dimensions
         canvas.width = documentImage.width;
-        canvas.height = documentImage.height + 350; // Added extra space for text
+        canvas.height = documentImage.height + 350;
 
         // Fill the canvas with a white background
-        ctx.fillStyle = '#ffffff'; // White background
+        ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw the document image on the canvas
@@ -59,12 +59,12 @@ function App() {
 
           // Add "Scan to verify" text
           ctx.font = '20px Arial';
-          ctx.fillStyle = '#000'; // Black text
+          ctx.fillStyle = '#000';
           ctx.textAlign = 'center';
-          ctx.fillText('Scan to verify', canvas.width / 2, documentImage.height + 330); // Adjusted position
+          ctx.fillText('Scan to verify', canvas.width / 2, documentImage.height + 330);
 
           // Convert the canvas to a JPEG image and trigger download
-          const dataUrl = canvas.toDataURL('image/jpeg', 1.0); // JPEG format with maximum quality
+          const dataUrl = canvas.toDataURL('image/jpeg', 1.0);
           const blob = dataURLtoBlob(dataUrl);
           saveAs(blob, 'document_with_qr.jpg');
         };
