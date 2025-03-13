@@ -20,7 +20,6 @@ function App() {
 
   const handleGenerateQRCode = () => {
     if (url) {
-      // Increase the QR code size by setting a larger width (e.g., 400)
       QRCode.toDataURL(url, { width: 400, margin: 2 }, (err, dataUrl) => {
         if (err) {
           console.error('Error generating QR code:', err);
@@ -40,30 +39,50 @@ function App() {
       const documentImage = new Image();
       documentImage.src = URL.createObjectURL(file);
       documentImage.onload = () => {
-        // Draw the document image on the canvas
+        // Set canvas dimensions
         canvas.width = documentImage.width;
-        canvas.height = documentImage.height + 300;
+        canvas.height = documentImage.height + 350; // Added extra space for text
+
+        // Fill the canvas with a white background
+        ctx.fillStyle = '#ffffff'; // White background
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the document image on the canvas
         ctx.drawImage(documentImage, 0, 0);
 
-        // Draw the QR code at the bottom
+        // Load the QR code image
         const qrCodeImageElement = new Image();
         qrCodeImageElement.src = qrCodeImage;
         qrCodeImageElement.onload = () => {
+          // Draw the QR code at the bottom
           ctx.drawImage(qrCodeImageElement, (canvas.width - 300) / 2, documentImage.height + 10, 300, 300);
 
           // Add "Scan to verify" text
           ctx.font = '20px Arial';
-          ctx.fillStyle = '#000';
+          ctx.fillStyle = '#000'; // Black text
           ctx.textAlign = 'center';
-          ctx.fillText('Scan to verify', canvas.width / 2, documentImage.height + 320);
-        };
+          ctx.fillText('Scan to verify', canvas.width / 2, documentImage.height + 330); // Adjusted position
 
-        // Save the canvas as an image
-        canvas.toBlob((blob) => {
-          saveAs(blob, 'document_with_qr.png');
-        });
+          // Convert the canvas to a JPEG image and trigger download
+          const dataUrl = canvas.toDataURL('image/jpeg', 1.0); // JPEG format with maximum quality
+          const blob = dataURLtoBlob(dataUrl);
+          saveAs(blob, 'document_with_qr.jpg');
+        };
       };
     }
+  };
+
+  // Helper function to convert data URL to Blob
+  const dataURLtoBlob = (dataUrl) => {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
   };
 
   return (
