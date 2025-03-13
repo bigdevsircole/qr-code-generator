@@ -69,8 +69,8 @@ function App() {
   return (
     <div className="app">
       <img className='logo' src={logo} alt="Barcode Generator Logo" />
-      <h1>QR Code Generator by Caleb Yinusa</h1>
-      <p>Kindly upload your document in either jpeg, jpg or png format </p>
+      <h3>QR-Code Generator by Caleb Yinusa</h3>
+      <p>Upload file in jpeg, jpg or png format</p>
       <div className="upload-section">
         <input type="file" onChange={handleFileChange} accept=".pdf,.doc,.docx,.png,.jpg" />
         <input
