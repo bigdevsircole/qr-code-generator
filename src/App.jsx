@@ -5,10 +5,22 @@ import './App.css';
 import logo from './/assets/images/barcode-generator-logo.png';
 
 function App() {
+  const [mode, setMode] = useState('both');
   const [file, setFile] = useState(null);
   const [url, setUrl] = useState('');
   const [qrCodeImage, setQrCodeImage] = useState('');
   const canvasRef = useRef(null);
+
+  const handleCreateNew = () => {
+    setFile(null);
+    setUrl('');
+    setQrCodeImage('');
+  };
+
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+    handleCreateNew();
+  };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -34,6 +46,12 @@ function App() {
   };
 
   const handleDownload = () => {
+    if (mode === 'qr_only' && qrCodeImage) {
+      const blob = dataURLtoBlob(qrCodeImage);
+      saveAs(blob, 'qr_code.png');
+      return;
+    }
+
     if (file && qrCodeImage) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
@@ -99,9 +117,17 @@ function App() {
     <div className="app">
       <img className='logo' src={logo} alt="Barcode Generator Logo" />
       <h1>QR-Code Generator</h1>
-      <p>Upload file in jpeg, jpg or png format</p>
+      <div className="mode-toggle">
+        <button className={mode === 'both' ? 'active' : ''} onClick={() => handleModeChange('both')}>Image with QR Code</button>
+        <button className={mode === 'qr_only' ? 'active' : ''} onClick={() => handleModeChange('qr_only')}>QR Code Only</button>
+      </div>
+
+      {mode === 'both' && <p>Upload file in jpeg, jpg or png format</p>}
+      
       <div className="upload-section">
-        <input type="file" onChange={handleFileChange} accept="image/png, image/jpeg, image/jpg" />
+        {mode === 'both' && (
+          <input type="file" onChange={handleFileChange} accept="image/png, image/jpeg, image/jpg" />
+        )}
         <input
           type="text"
           placeholder="Enter URL"
@@ -110,18 +136,28 @@ function App() {
         />
         <button onClick={handleGenerateQRCode}>Generate QR Code</button>
       </div>
-      {file && qrCodeImage && (
+      
+      {qrCodeImage && (mode === 'qr_only' || file) && (
         <div className="document-preview">
-          <img src={URL.createObjectURL(file)} alt="Uploaded Document" className="document-image" />
+          {mode === 'both' && file && (
+            <img src={URL.createObjectURL(file)} alt="Uploaded Document" className="document-image" />
+          )}
+          
           <div className="qr-code-section">
             <img src={qrCodeImage} alt="QR Code" />
-            <p>Scan to verify</p>
+            {mode === 'both' && <p>Scan to verify</p>}
           </div>
-          <button onClick={handleDownload}>Download Document with QR Code</button>
+
+          <div className="action-buttons">
+            <button className="download-btn" onClick={handleDownload}>
+              {mode === 'both' ? 'Download image with QR Code' : 'Download QR Code'}
+            </button>
+            <button className="create-new-btn" onClick={handleCreateNew}>Create New</button>
+          </div>
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-      <footer>copyright 2025 Made with ♥ by Caleb Yinusa</footer>
+      <footer>copyright {new Date().getFullYear()} Made with ♥ by Caleb Yinusa</footer>
     </div>
   );
 }
