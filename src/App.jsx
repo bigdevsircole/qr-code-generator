@@ -19,15 +19,18 @@ function App() {
   };
 
   const handleGenerateQRCode = () => {
-    if (url) {
-      QRCode.toDataURL(url, { width: 400, margin: 2 }, (err, dataUrl) => {
-        if (err) {
-          console.error('Error generating QR code:', err);
-          return;
-        }
-        setQrCodeImage(dataUrl);
-      });
+    if (!url.trim()) {
+      alert("Please enter a valid URL.");
+      return;
     }
+    
+    QRCode.toDataURL(url, { width: 400, margin: 2 }, (err, dataUrl) => {
+      if (err) {
+        console.error('Error generating QR code:', err);
+        return;
+      }
+      setQrCodeImage(dataUrl);
+    });
   };
 
   const handleDownload = () => {
@@ -39,9 +42,12 @@ function App() {
       const documentImage = new Image();
       documentImage.src = URL.createObjectURL(file);
       documentImage.onload = () => {
+        // Calculate dynamic QR Code size based on document width (e.g. 25% of width, minimum 100px)
+        const qrSize = Math.max(100, documentImage.width * 0.25);
+        
         // Set canvas dimensions
         canvas.width = documentImage.width;
-        canvas.height = documentImage.height + 350;
+        canvas.height = documentImage.height + qrSize + 50;
 
         // Fill the canvas with a white background
         ctx.fillStyle = '#ffffff';
@@ -54,19 +60,23 @@ function App() {
         const qrCodeImageElement = new Image();
         qrCodeImageElement.src = qrCodeImage;
         qrCodeImageElement.onload = () => {
-          // Draw the QR code at the bottom
-          ctx.drawImage(qrCodeImageElement, (canvas.width - 300) / 2, documentImage.height + 10, 300, 300);
+          // Draw the QR code at the bottom center
+          ctx.drawImage(qrCodeImageElement, (canvas.width - qrSize) / 2, documentImage.height + 10, qrSize, qrSize);
 
           // Add "Scan to verify" text
-          ctx.font = '20px Arial';
+          const fontSize = Math.max(16, qrSize * 0.08); // scale font size dynamically
+          ctx.font = `${fontSize}px Arial`;
           ctx.fillStyle = '#000';
           ctx.textAlign = 'center';
-          ctx.fillText('Scan to verify', canvas.width / 2, documentImage.height + 330);
+          ctx.fillText('Scan to verify', canvas.width / 2, documentImage.height + qrSize + 40);
 
           // Convert the canvas to a JPEG image and trigger download
           const dataUrl = canvas.toDataURL('image/jpeg', 1.0);
           const blob = dataURLtoBlob(dataUrl);
-          saveAs(blob, 'document_with_qr.jpg');
+          
+          // Generate a dynamic filename based on the uploaded file
+          const originalName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+          saveAs(blob, `${originalName}_with_qr.jpg`);
         };
       };
     }
@@ -91,7 +101,7 @@ function App() {
       <h1>QR-Code Generator</h1>
       <p>Upload file in jpeg, jpg or png format</p>
       <div className="upload-section">
-        <input type="file" onChange={handleFileChange} accept=".pdf,.doc,.docx,.png,.jpg" />
+        <input type="file" onChange={handleFileChange} accept="image/png, image/jpeg, image/jpg" />
         <input
           type="text"
           placeholder="Enter URL"

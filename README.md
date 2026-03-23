@@ -21,7 +21,7 @@ Download the document with the embedded QR code as a PNG image.
 Framework/Library:
 React: The code is written in React, using hooks like useState and useRef.
 qrcode.react: This library is used for generating QR codes.
-html2canvas: This library is used to take a screenshot of the document with the qr code overlay.
+Native Canvas API: Used to render the document image and the QR code on a single, manipulable canvas.
 
 Key Technologies/APIs:
 JavaScript: The core language.
@@ -30,15 +30,15 @@ React Hooks: useState for managing component state, useRef for creating a ref to
 File API: Used to handle file uploads (e.g., event.target.files).
 
 URL.createObjectURL: To create a temporary URL for the uploaded file.
-html2canvas To render html into a canvas and capture the image.
-canvas.toDataURL To save the canvas as a png file.
+Canvas API (ctx.drawImage): To render images directly to a hidden canvas and overlay the QR code.
+canvas.toDataURL To save the canvas as a png/jpg file.
 Document.createElement To create an anchor tag
 a.download To enable downloading
 
 External Resources:
 React Documentation: https://react.dev/
 qrcode.react: https://www.npmjs.com/package/qrcode.react
-html2canvas https://html2canvas.hertzen.com/
+Canvas API: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
 File API https://developer.mozilla.org/en-US/docs/Web/API/File_API
 URL.createObjectURL https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
 Document.createElement https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
